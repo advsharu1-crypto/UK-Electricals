@@ -1,0 +1,288 @@
+/* UK Electricals: bottom navigation, enquiry popup, floating buttons.
+   Loaded after style.css. style.css is not modified; these rules only add to it.
+   Everything is scoped to .bn-*, .pq-* or html.bn-on so no existing rule is changed. */
+
+html.bn-on{--bn-h:58px;--bn-safe:env(safe-area-inset-bottom,0px)}
+html.bn-lock{overflow:hidden}
+
+/* ---------- bottom navigation ---------- */
+.bn{position:fixed;left:0;right:0;bottom:0;z-index:88;padding:0 4px var(--bn-safe);background:rgba(20,34,53,.97);border-top:1px solid rgba(245,180,0,.4);box-shadow:0 -8px 26px rgba(10,20,35,.22);font-family:var(--font-b);animation:bn-in .5s cubic-bezier(.22,.61,.36,1) both}
+.bn ul{list-style:none;margin:0 auto;padding:0;max-width:560px;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:end}
+.bn li{min-width:0}
+.bn-it{appearance:none;-webkit-appearance:none;border:0;background:none;margin:0;width:100%;height:var(--bn-h);padding:8px 2px 6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;color:#c5d1e2;font:600 .66rem/1.1 var(--font-b);letter-spacing:.01em;text-decoration:none;cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;transition:color .2s}
+.bn-it span{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bn-it svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round;flex:none;transition:transform .2s}
+.bn-it:hover{color:#fff}
+.bn-it:active svg{transform:scale(.9)}
+.bn-it:focus-visible{outline:2px solid var(--yellow);outline-offset:-3px;border-radius:10px}
+.bn-it[aria-current=page],.bn-it.is-active,.bn-it[aria-expanded=true]{color:var(--yellow)}
+.bn-it[aria-current=page]::before,.bn-it.is-active::before,.bn-it[aria-expanded=true]::before{content:"";position:absolute;top:0;left:50%;width:18px;height:3px;margin-left:-9px;border-radius:0 0 3px 3px;background:var(--yellow)}
+
+/* Book Now: the primary action, slightly raised */
+.bn-book{color:#fff;font-weight:700}
+.bn-ico{display:grid;place-items:center;width:46px;height:46px;margin-top:-20px;border-radius:16px;background:linear-gradient(145deg,#FFC929,var(--yellow));color:var(--navy);border:3px solid var(--navy);box-shadow:0 6px 16px rgba(245,180,0,.35);animation:bn-glow 3s ease-in-out infinite;transition:transform .2s}
+.bn-ico svg{width:22px;height:22px;stroke-width:2.1}
+.bn-book:hover .bn-ico{transform:translateY(-2px)}
+.bn-book:active .bn-ico{transform:scale(.94)}
+.bn-book:hover,.bn-book:focus-visible{color:#fff}
+.bn-book:focus-visible .bn-ico{outline:2px solid #fff;outline-offset:2px}
+@keyframes bn-glow{0%,100%{box-shadow:0 6px 16px rgba(245,180,0,.35),0 0 0 0 rgba(245,180,0,.45)}55%{box-shadow:0 6px 16px rgba(245,180,0,.35),0 0 0 9px rgba(245,180,0,0)}}
+@keyframes bn-in{from{transform:translateY(100%)}to{transform:none}}
+
+/* page space so the bar never hides the end of the footer */
+html.bn-on footer::after{content:"";display:block;height:calc(var(--bn-h) + var(--bn-safe) + 6px)}
+
+/* ---------- slide-up menus (Services, More) ---------- */
+.bn-scrim{position:fixed;inset:0;z-index:86;background:rgba(14,24,38,.45);opacity:0;visibility:hidden;transition:opacity .25s,visibility 0s .25s}
+.bn-scrim.on{opacity:1;visibility:visible;transition:opacity .25s}
+.bn-sheet{position:fixed;z-index:87;left:10px;right:10px;bottom:calc(var(--bn-h) + var(--bn-safe) + 10px);max-height:min(68vh,calc(100dvh - var(--bn-h) - var(--bn-safe) - 90px));overflow:auto;overscroll-behavior:contain;background:#fff;border-radius:18px;box-shadow:0 18px 50px rgba(10,20,35,.32);border:1px solid var(--line);padding:6px 6px 8px;opacity:0;visibility:hidden;transform:translateY(14px) scale(.98);transform-origin:50% 100%;transition:opacity .22s,transform .22s,visibility 0s .22s}
+.bn-sheet.on{opacity:1;visibility:visible;transform:none;transition:opacity .22s,transform .22s}
+.bn-sh-t{margin:0;padding:10px 12px 4px;font:700 .8rem/1.2 var(--font-h);color:var(--muted)}
+.bn-sh-t:first-child{padding-top:8px}
+.bn-sheet ul{list-style:none;margin:0;padding:0;display:grid}
+.bn-sheet li a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:44px;padding:8px 12px;border-radius:12px;color:var(--navy);font:600 .95rem/1.25 var(--font-b);text-decoration:none;transition:background .15s,color .15s}
+.bn-sheet li a::after{content:"";flex:none;width:7px;height:7px;border-top:2px solid #a9b4c4;border-right:2px solid #a9b4c4;transform:rotate(45deg);transition:transform .2s,border-color .2s}
+.bn-sheet li a:hover,.bn-sheet li a:focus-visible{background:#FFF7DC;outline:0}
+.bn-sheet li a:hover::after,.bn-sheet li a:focus-visible::after{border-color:var(--navy);transform:translateX(2px) rotate(45deg)}
+.bn-sheet li a[aria-current=page]{background:var(--navy);color:#fff}
+.bn-sheet li a[aria-current=page]::after{border-color:var(--yellow)}
+.bn-sheet+.bn-sheet{}
+
+/* ---------- enquiry popup ---------- */
+.pq{position:fixed;inset:0;z-index:320;display:grid;place-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 10px calc(10px + env(safe-area-inset-bottom,0px));background:rgba(12,21,34,.6);opacity:0;visibility:hidden;transition:opacity .28s,visibility 0s .28s}
+.pq.on{opacity:1;visibility:visible;transition:opacity .28s}
+.pq-dlg{position:relative;width:min(92vw,410px);max-height:calc(var(--pq-vh,100dvh) - 20px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px));overflow:auto;overscroll-behavior:contain;background:#fff;border-radius:20px;box-shadow:0 28px 70px rgba(8,16,28,.45);transform:translateY(10px) scale(.96);transition:transform .3s cubic-bezier(.22,.61,.36,1);font-family:var(--font-b)}
+.pq.on .pq-dlg{transform:none}
+.pq-dlg:focus{outline:0}
+.pq-hd{padding:18px 56px 14px 20px;background:linear-gradient(145deg,var(--blue),var(--navy));color:#fff;border-radius:20px 20px 0 0;border-bottom:3px solid var(--yellow)}
+.pq-hd h2{margin:0;font:800 1.2rem/1.2 var(--font-h);color:#fff}
+.pq-hd p{margin:.3rem 0 0;font-size:.84rem;line-height:1.4;color:#c9d6e6}
+.pq-x{position:absolute;top:10px;right:10px;width:36px;height:36px;border:0;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);color:#fff;cursor:pointer;transition:background .2s,transform .2s;-webkit-tap-highlight-color:transparent}
+.pq-x:hover{background:var(--yellow);color:var(--navy);transform:rotate(90deg)}
+.pq-x:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+.pq-x svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.pq form{padding:14px 20px 18px;display:grid;gap:10px}
+.pq-f{display:grid;gap:4px;min-width:0}
+.pq-f label{font:600 .8rem/1.2 var(--font-b);color:var(--navy)}
+.pq-f label i{color:#B42318;font-style:normal}
+.pq-f input,.pq-f select,.pq-f textarea{width:100%;min-width:0;height:42px;padding:0 12px;border:1.5px solid #d3dbe6;border-radius:11px;background:#fff;color:var(--text);font:400 16px/1.3 var(--font-b);transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+.pq-f select{padding-right:34px;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23142235' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 13px center}
+.pq-f textarea{height:auto;min-height:68px;padding:9px 12px;resize:none}
+.pq-f input:focus,.pq-f select:focus,.pq-f textarea:focus{outline:0;border-color:var(--yellow);box-shadow:0 0 0 3px rgba(245,180,0,.28)}
+.pq-f .bad{border-color:#B42318}
+.pq-e{min-height:0;font-size:.76rem;line-height:1.3;color:#B42318}
+.pq-e:empty{display:none}
+.pq-hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.pq-go{height:46px;border:0;border-radius:12px;background:var(--yellow);color:var(--navy);font:800 1rem/1 var(--font-h);cursor:pointer;box-shadow:0 6px 16px rgba(245,180,0,.3);transition:transform .2s,box-shadow .2s,filter .2s;-webkit-tap-highlight-color:transparent}
+.pq-go:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.pq-go:active{transform:scale(.98)}
+.pq-go:focus-visible{outline:2px solid var(--navy);outline-offset:2px}
+.pq-go:disabled{opacity:.6;cursor:wait;transform:none}
+.pq-note{margin:0;font-size:.74rem;line-height:1.4;color:var(--muted)}
+.pq-note a{color:var(--navy);text-decoration:underline}
+.pq-st{margin:0;padding:0;font-size:.86rem;line-height:1.45;border-radius:11px}
+.pq-st:not(:empty){padding:10px 12px}
+.pq-st.info{background:#FFF7DC;color:#5b4500}
+.pq-st.ok{background:#E8F6EE;color:#14532d}
+.pq-st.fail{background:#FDECEA;color:#7a1a12}
+.pq-st a{color:inherit;font-weight:700}
+.pq-st .pq-wa{display:inline-flex;align-items:center;gap:6px;margin-top:8px;padding:8px 14px;border-radius:999px;background:var(--wa);color:#fff;text-decoration:none;font-weight:700}
+
+/* ---------- floating Call and WhatsApp (existing .float block, repositioned and polished) ---------- */
+html.bn-on .float{z-index:85;right:12px;bottom:calc(var(--bn-h) + var(--bn-safe) + 16px);gap:10px}
+html.bn-on .float a{width:48px;height:48px;box-shadow:0 6px 18px rgba(10,20,35,.3)}
+html.bn-on .float .icon{width:23px;height:23px}
+html.bn-on .float a:focus-visible{outline:2px solid var(--navy);outline-offset:3px}
+html.bn-on .float .fw{animation:bn-wa 3.2s ease-out infinite}
+@keyframes bn-wa{0%,70%,100%{box-shadow:0 6px 18px rgba(10,20,35,.3),0 0 0 0 rgba(37,211,102,.5)}85%{box-shadow:0 6px 18px rgba(10,20,35,.3),0 0 0 10px rgba(37,211,102,0)}}
+html.bn-on .float a:hover,html.bn-on .float a:focus-visible{animation:none}
+
+/* ---------- tablets and desktop: a compact floating pill ---------- */
+@media(min-width:768px){
+  html.bn-on{--bn-h:60px}
+  .bn{left:50%;right:auto;bottom:16px;width:min(540px,calc(100% - 32px));transform:translateX(-50%);padding:0 6px;border:1px solid rgba(255,255,255,.12);border-radius:22px;animation:bn-in-d .5s cubic-bezier(.22,.61,.36,1) both}
+  @keyframes bn-in-d{from{transform:translate(-50%,140%)}to{transform:translateX(-50%)}}
+  .bn-sheet{left:50%;right:auto;width:min(400px,calc(100% - 32px));transform:translate(-50%,14px) scale(.98);bottom:calc(16px + var(--bn-h) + 10px)}
+  .bn-sheet.on{transform:translateX(-50%)}
+  html.bn-on footer::after{height:calc(var(--bn-h) + 36px)}
+  html.bn-on .float{right:22px;bottom:24px}
+  html.bn-on .float a{width:52px;height:52px}
+}
+/* the very narrowest phones */
+@media(max-width:340px){
+  .bn-it{font-size:.6rem;gap:2px}
+  .bn-it svg{width:19px;height:19px}
+  .bn-ico{width:42px;height:42px;border-radius:14px}
+  .pq-hd{padding:16px 50px 12px 16px}
+  .pq form{padding:12px 16px 16px}
+}
+/* landscape phones and other short windows */
+@media(max-height:480px){
+  html.bn-on{--bn-h:46px}
+  .bn-it{flex-direction:row;gap:6px;font-size:.7rem;padding:0 2px}
+  .bn-it svg{width:18px;height:18px}
+  .bn-it[aria-current=page]::before,.bn-it.is-active::before,.bn-it[aria-expanded=true]::before{width:14px;height:2px;margin-left:-7px}
+  .bn-ico{width:auto;height:34px;margin-top:-12px;padding:0 10px;border-radius:12px;border-width:2px}
+  .bn-book{flex-direction:column}
+  .bn-book span{display:none}
+  .bn-sheet{max-height:calc(100dvh - var(--bn-h) - var(--bn-safe) - 40px)}
+  html.bn-on .float{bottom:calc(var(--bn-h) + var(--bn-safe) + 10px)}
+  .pq-hd{padding:12px 50px 10px 18px}
+  .pq-hd p{display:none}
+}
+@media(min-width:768px) and (max-height:480px){.bn{bottom:8px}.bn-sheet{bottom:calc(8px + var(--bn-h) + 8px)}html.bn-on .float{bottom:14px}}
+@media(prefers-reduced-motion:reduce){
+  .bn,.bn-ico,html.bn-on .float .fw{animation:none}
+  .bn-sheet,.pq,.pq-dlg,.bn-scrim,.pq-x,.pq-go,.bn-it svg{transition:none}
+  .pq-dlg,.bn-sheet{transform:none}
+  @media(min-width:768px){.bn-sheet{transform:translateX(-50%)}}
+}
+
+/* ---------- desktop (1024px and up): no bottom bar; the header menu is used. Floating Call/WhatsApp and the enquiry popup are unchanged. ---------- */
+@media(min-width:1024px){
+  .bn,.bn-sheet{display:none!important}
+  html.bn-on footer::after{display:none}
+}
+
+/* ---------- footer social logos ---------- */
+.fsoc{list-style:none;margin:0;padding:1.6rem 0 0;display:flex;justify-content:center;align-items:center;gap:14px;border-top:1px solid rgba(255,255,255,.12)}
+.fsoc a{display:grid;place-items:center;width:44px;height:44px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25);transition:transform .2s,box-shadow .2s;text-decoration:none}
+.fsoc a:hover,.fsoc a:focus-visible{transform:translateY(-3px);box-shadow:0 0 0 2px var(--yellow),0 8px 18px rgba(0,0,0,.35)}
+.fsoc a:focus-visible{outline:2px solid #fff;outline-offset:3px}
+.fsoc svg{width:22px;height:22px;display:block}
+.fsoc .fs-ig svg{fill:#E4405F}.fsoc .fs-g svg{fill:#4285F4}.fsoc .fs-yt svg{fill:#FF0000}
+.fsoc img{width:26px;height:26px;object-fit:contain;display:block}
+.fsoc .fs-txt{font:800 .62rem var(--font-h);color:var(--navy);letter-spacing:0}
+footer .fbot{margin-top:1.6rem}
+@media(prefers-reduced-motion:reduce){.fsoc a{transition:none}.fsoc a:hover,.fsoc a:focus-visible{transform:none}}
+
+/* ---------- hero and About photographs ---------- */
+.hero-photo{margin:0;position:relative;border-radius:var(--r);overflow:hidden;box-shadow:0 30px 60px -20px rgba(20,34,53,.5);background:var(--navy);justify-self:center;width:100%;max-width:480px}
+.hero-photo img{display:block;width:100%;height:auto;aspect-ratio:4/5;object-fit:cover;object-position:50% 20%}
+@media(max-width:900px){.hero-photo{max-width:420px}.hero-photo img{aspect-ratio:4/4.4}}
+.about .pic img{object-position:60% 40%}
+.phero img[src*="about-electrician"],.phero img[data-img="about-electrician"]{object-position:30% 35%}
+.phero img[src*="about-electrician"],.phero img[data-img="about-electrician"],.about .pic img[src*="about-electrician"],.about .pic img[data-img="about-electrician"]{height:auto}
+.phero img[src*="about-electrician"],.phero img[data-img="about-electrician"]{object-position:35% 40%}
+
+/* PIN code locality lists (area pages and service-areas hub) */
+.prose .subareas,.subareas{list-style:none;margin:.9rem 0 1rem;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.45rem .7rem}
+.subareas li{margin:0;padding:.4rem .65rem;background:var(--soft);border-radius:8px;font-size:.92rem;line-height:1.35;overflow-wrap:anywhere}
+.prose .vf{font-size:.9rem;color:var(--muted)}
+.pinlist{list-style:none;margin:0;padding:0;display:grid;gap:.6rem;grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.pinlist li{margin:0;padding:.8rem 1rem;background:var(--soft);border-radius:10px;font-size:.95rem;line-height:1.45}
+.pinlist li strong{color:var(--navy);margin-right:.35rem}
+@media(max-width:480px){.subareas{grid-template-columns:1fr 1fr}.pinlist{grid-template-columns:1fr}}
+
+/* ===== Final enhancement pass (audit fixes + header menu) ===== */
+/* Header: one slide-in menu panel at every width (menu button always visible). The panel itself is the existing #site-nav. */
+.head-cta .btn-n{display:none}
+@media(min-width:761px){.head-cta .btn-n{display:inline-flex}}
+.nav a.nl:focus-visible,.nav button.nl:focus-visible,.burger:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.burger{flex:none}
+body.menu-open{overflow:hidden}
+/* C4: long email may wrap so the contact grid cannot grow wider than its container */
+.cgrid>*,.cinfo li>div{min-width:0}
+.cinfo a[href^="mailto:"]{overflow-wrap:anywhere}
+/* H1: dark-panel link colour no longer overrides the yellow button text */
+.cinfo a.btn-y{color:var(--navy)}
+/* M4: muted text meets 4.5:1 on the light panel */
+:root{--muted:#5F6A7D}
+/* M3: larger touch targets */
+footer li a,footer .flinks a{display:inline-block;padding:.3rem 0;min-height:24px}
+.consent{position:relative}.consent input{width:22px;height:22px;flex:none}
+/* M11: keep the last footer line clear of the floating buttons on phones */
+@media(max-width:560px){footer{padding-bottom:6rem}}
+.fbot nav a{display:inline-block;padding:.35rem 0;min-height:24px}
+
+/* Compact enquiry popup: two columns from 700px wide, tighter spacing; phones keep the single column */
+@media(min-width:700px){
+  .pq-dlg{width:min(92vw,640px)}
+  .pq-hd{padding:14px 56px 11px 22px}
+  .pq-hd p{margin-top:.2rem}
+  .pq form{padding:12px 22px 14px;grid-template-columns:1fr 1fr;gap:9px 14px}
+  .pq-full,.pq-st,.pq-go,.pq-note{grid-column:1/-1}
+  .pq-f input,.pq-f select{height:40px}
+  .pq-f textarea{min-height:56px;max-height:84px}
+  .pq-go{height:44px}
+}
+@media(min-width:700px) and (max-height:620px){.pq-hd p{display:none}.pq-note{display:none}}
+
+/* Scroll reveal: paired blocks slide in from opposite sides (small distance, same timing as the existing fade-up).
+   Content is fully visible without JavaScript: these rules only apply under .js. */
+.js main{overflow-x:clip}
+.js .rv.rv-l{transform:translateX(-34px)}
+.js .rv.rv-r{transform:translateX(34px)}
+.js .rv.rv-l.in,.js .rv.rv-r.in{opacity:1;transform:none}
+@media(max-width:900px){.js .rv.rv-l,.js .rv.rv-r{transform:translateY(18px)}.js .rv.rv-l.in,.js .rv.rv-r.in{transform:none}}
+@media(prefers-reduced-motion:reduce){.js .rv.rv-l,.js .rv.rv-r{opacity:1;transform:none}}
+
+/* Regression fix: inline desktop navigation is restored from 1280px; the slide-in panel serves narrower screens.
+   The menu button is hidden only where the inline links are visible. */
+.nav>a.nq{display:none}
+@media(max-width:760px){.nav>a.nq{display:flex;justify-content:center;margin:1.2rem .6rem 0}}
+@media(min-width:1280px){.head-cta .btn-n{display:inline-flex}}
+/* Desktop (1280px+): the Menu button sits at the right of Request a Quote and opens the existing slide-in panel (#site-nav).
+   The inline links stay in the header; only while the panel is open is the same nav shown as the panel. */
+@media(min-width:1280px){
+  .head-cta{gap:.5rem;align-items:center}
+  .head-cta .btn-sm{padding:.65rem .85rem;font-size:.88rem;min-height:42px}
+  .head-cta .burger{display:grid}
+  .nav.open{position:fixed;inset:0 0 0 auto;width:min(380px,100%);background:#fff;flex-direction:column;align-items:stretch;padding:5.5rem 1.2rem 2rem;overflow:auto;z-index:150;box-shadow:-12px 0 40px rgba(0,0,0,.2);animation:ukNavIn .3s ease-out}
+  .nav.open>ul{flex-direction:column}
+  .nav.open a.nl,.nav.open button.nl{width:100%;justify-content:space-between;padding:.9rem .6rem;font-size:1.05rem;border-bottom:1px solid var(--line);border-radius:0}
+  .nav.open .dd,.nav.open .dd.wide{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;display:none;width:auto;padding:.2rem 0 .6rem .6rem;grid-template-columns:1fr}
+  .nav.open .has-dd:hover>.dd{display:none}
+  .nav.open .has-dd.open>.dd,.nav.open .has-dd.open:hover>.dd{display:block}
+  .nav.open .nav-close{display:grid;position:absolute;top:1rem;right:1rem}
+  .scrim{display:block;position:fixed;inset:0;background:rgba(20,34,53,.55);z-index:99;opacity:0;visibility:hidden;transition:.3s}
+  .scrim.on{opacity:1;visibility:visible}
+}
+/* keep the wide Service Areas dropdown inside the viewport at the narrowest desktop widths */
+@media(min-width:1280px) and (max-width:1320px){#dd-a{left:-16px}}
+@keyframes ukNavIn{from{transform:translateX(100%)}to{transform:none}}
+@media(prefers-reduced-motion:reduce){.nav.open{animation:none}}
+
+/* Service photographs: keep the 4:3 frame the illustrations used (the height attribute must not set the height) */
+.phero img[src$=".webp"]{height:auto}
+img[src$="svc-commercial.webp"]{object-position:18% center}
+img[src$="svc-repair.webp"]{object-position:35% center}
+
+/* Homepage Residential / Commercial photos (portrait) */
+.split .pic.tall img[src$="home-residential.webp"],.split .pic.tall img[src$="home-commercial.webp"]{height:auto;aspect-ratio:4/4.6}
+.split .pic.tall img[src$="home-residential.webp"]{object-position:72% 30%}
+.split .pic.tall img[src$="home-commercial.webp"]{object-position:60% 45%}
+@media(max-width:900px){.split .pic.tall img[src$="home-residential.webp"],.split .pic.tall img[src$="home-commercial.webp"]{aspect-ratio:4/4.4}}
+
+/* Single-file edition: images carry data-img (src is set by script), so mirror the .webp rules */
+.phero img[data-img^="svc-"]{height:auto}
+img[data-img="svc-commercial"]{object-position:18% center}
+img[data-img="svc-repair"]{object-position:35% center}
+.split .pic.tall img[data-img="home-residential"],.split .pic.tall img[data-img="home-commercial"]{height:auto;aspect-ratio:4/4.6}
+.split .pic.tall img[data-img="home-residential"]{object-position:72% 30%}
+.split .pic.tall img[data-img="home-commercial"]{object-position:60% 45%}
+@media(max-width:900px){.split .pic.tall img[data-img="home-residential"],.split .pic.tall img[data-img="home-commercial"]{aspect-ratio:4/4.4}}
+
+/* Project cards are links; project detail pages */
+a.gi{text-decoration:none;color:inherit;cursor:pointer}
+.gi .vp{display:inline-flex;align-items:center;gap:.35rem;margin-top:.4rem;font:700 .85rem var(--font-h);color:var(--yellow)}
+.gi .vp svg{width:1em;height:1em}
+.gi:focus-visible{outline:3px solid var(--yellow);outline-offset:2px}
+.pcat{display:inline-block;margin:0 0 .6rem;padding:.2rem .7rem;border-radius:999px;background:var(--soft);color:var(--navy);font:600 .85rem var(--font-b)}
+.phero .note{margin-top:.7rem}
+
+/* Close (x) button inside the bottom-navigation Services and More popups */
+.bn-sh-x{position:sticky;top:0;z-index:2;display:flex;justify-content:flex-end;align-items:center;height:36px;padding:2px 4px 0;background:#fff;border-radius:16px 16px 0 0}
+.bn-x{appearance:none;-webkit-appearance:none;position:relative;display:grid;place-items:center;width:32px;height:32px;margin:0;padding:0;border:0;border-radius:50%;background:#EEF2F7;color:var(--navy);cursor:pointer;transition:background .15s}
+.bn-x::after{content:"";position:absolute;inset:-6px}
+.bn-x svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linecap:round}
+.bn-x:hover{background:#FFF7DC}
+.bn-x:active{background:#FFE9A8}
+.bn-x:focus-visible{outline:2px solid var(--yellow);outline-offset:2px}
+
+/* Mobile footer: Quick links and Electrical services side by side; brand block above and Contact below stay full width (phones only) */
+@media(max-width:560px){
+  .fgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:1.25rem;row-gap:2.5rem}
+  .fgrid>div:first-child,.fgrid>div:last-child{grid-column:1/-1}
+  .fgrid>div:nth-child(2) a,.fgrid>div:nth-child(3) a{overflow-wrap:anywhere}
+}

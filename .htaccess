@@ -1,0 +1,16 @@
+# Apache: clean URLs, custom 404. Uncomment the HTTPS block after installing an SSL certificate.
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+RewriteEngine On
+#RewriteCond %{HTTPS} off
+#RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+RewriteCond %{THE_REQUEST} \s/(.*)index\.html[\s?]
+RewriteRule ^(.*)index\.html$ /$1 [R=301,L]
+<IfModule mod_expires.c>
+ExpiresActive On
+ExpiresByType image/svg+xml "access plus 1 month"
+ExpiresByType image/png "access plus 1 month"
+ExpiresByType text/css "access plus 1 week"
+ExpiresByType application/javascript "access plus 1 week"
+</IfModule>
